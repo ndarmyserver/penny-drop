@@ -1,0 +1,93 @@
+/*-------------------- Body --------------------*/
+
+body {
+  min-height: 450px;
+  height: 100vh;
+  margin: 0 0 40px;
+  padding: 0;
+  background-color: #D3D3D3;
+  color: #ffffff;
+  font-family: 'Oswald', sans-serif;;
+}
+
+a {
+  text-decoration: none;
+}
+
+.wrapper {
+  padding-bottom: 40px;
+}
+
+
+/*-------------------- Leaderboard --------------------*/
+.leaderboard {
+  overflow: hidden;
+  margin: 20px auto 0;
+  padding: 20px 20px 40px;
+  background: blue;
+  border-radius: 10px;
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+}
+.spacer {
+  margin: 20px 0 0;
+}
+.spacer-large {
+  margin: 40px 0 0;
+}
+.spacer-small {
+  margin: 10px 0 0;
+}
+
+.drop-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 40px 0; }
+.drop-spot { text-align: center; background-color: red; }
+.image-container { overflow: hidden; }
+.dice { font-size: 4rem; text-align: center; width: 33%; margin: 0 auto;}
+img.penny { display: block; width: 80%; margin: 0 auto; }
+.drop-line {
+  margin: 5px auto 10px;
+  border: 0;
+  height: 3px;
+  width: 80%;
+  background: black;
+}
+.stack-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 40px 0; }
+.stack-spot { font-size: 2rem; text-align: center; background-color: orange; color: black; }
+.active-player { background-color: green; }
+.slide-out { transform: translateY(100%); transition: transform 1s; }
+.slide-up { transform: translateY(-100%); transition: transform 1s; }
+/* .slide-out {  -webkit-transition: 3s;
+  -moz-transition: 3s;
+  -ms-transition: 3s;
+  -o-transition: 3s;
+  transition: 3s;
+  margin-top: 50% !important;} */
+.roll-button, .pass-button {
+  margin: 0 auto;
+  max-width: 350px;
+  background: #880808;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 4px rgba(0,0,0,0.25);
+  font-size: 24px;
+  padding: 25px;
+  text-align: center;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  line-height: 30px;
+  cursor: pointer;
+  transition: all 0.1s ease-in;
+}
+
+
+@media screen and (max-width: 600px) {
+  .leaderboard {
+    max-width: 350px;
+    width: 85% !important;
+  }
+}
+@media screen and (min-width: 601px) {
+  .leaderboard {
+    max-width: 800px;
+    width: 85% !important;
+  }
+}

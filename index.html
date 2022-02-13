@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>rock paper siccors war</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="leaderboard">
+        <div class="drop-wrapper">
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny1" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            1
+          </div>
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny2" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            2
+          </div>
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny3" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            3
+          </div>
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny4" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            4
+          </div>
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny5" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            5
+          </div>
+        </div>
+        <div class="drop-wrapper">
+          <div class="drop-spot"></div>
+          <div class="drop-spot"></div>
+          <div class="drop-spot">
+            <div class="image-container">
+              <img id="penny6" src="img/penny.png" class="penny" alt="Penny" style="visibility: hidden;">
+            </div>
+            <hr class="drop-line">
+            6
+          </div>
+          <div class="drop-spot"></div>
+          <div class="drop-spot"></div>
+        </div>
+        <div id="dice" class="dice">0</div>
+        <div class="spacer-large"></div>
+        <div class="button-wrapper">
+          <div id="rollButton" class="roll-button">ROLL</div>
+          <div class="spacer"></div>
+          <div id="passButton" class="pass-button">PASS</div>
+        </div>
+        <div class="stack-wrapper">
+          <div id="player0-stack" class="stack-spot"></div>
+          <div id="player1-stack" class="stack-spot"></div>
+          <div id="player2-stack" class="stack-spot"></div>
+          <div id="player3-stack" class="stack-spot"></div>
+          <div id="player4-stack" class="stack-spot"></div>
+        </div>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+  var spots = [false, false, false, false, false];
+  // var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
+  var players = ["Johnny", "Daddy"];
+  // var playerStacks = [10, 10, 10, 10, 10];
+  var playerStacks = [10, 10];
+  for (const [i, stack] of playerStacks.entries()) {
+    document.getElementById('player' + i + '-stack').innerHTML = stack;
+  }
+
+  var gameEnded = false;
+  var currentPlayer = 0;
+  document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+  var firstTurn = true;
+  document.getElementById('passButton').style.visibility = "hidden";
+
+  document.getElementById('rollButton').addEventListener('click', function(){
+    console.log("status of spots before roll:" + spots);
+    rollDice = (Math.floor(Math.random() * 6) + 1);
+    document.getElementById('dice').innerHTML = rollDice;
+
+    if (rollDice >= 1 && rollDice <= 5) {
+      if (spots[rollDice - 1]) {
+        const numOfPennies = spots.filter(Boolean).length;
+        playerStacks[currentPlayer] += numOfPennies;
+        document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
+        for (let j = 0; j < 5; j++) {
+          if (spots[j]) {
+            document.getElementById("penny" + (j+1)).classList.add('slide-up');
+          }
+        }
+        setTimeout(function() {
+          for (let j = 0; j < 5; j++) {
+            document.getElementById("penny" + (j+1)).style.visibility = "hidden"
+            if (spots[j]) {
+              document.getElementById("penny" + (j+1)).classList.remove('slide-up');
+            }
+            spots[j] = false;
+          }
+        }, 1000);
+
+
+        // Turn is over and advance to next player
+        document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+        console.log(currentPlayer + " of " + (players.length - 1));
+        if (currentPlayer == (players.length - 1)) {
+          currentPlayer = 0;
+        } else {
+          currentPlayer++;
+        }
+        console.log(currentPlayer + " of " + (players.length - 1));
+        document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+        document.getElementById('passButton').style.visibility = "hidden";
+        firstTurn = true;
+
+
+      } else {
+        var x = document.getElementById("penny" + rollDice);
+        if (x.style.visibility === "hidden") {
+          x.style.visibility = "visible";
+        } else {
+          x.style.visibility = "hidden";
+        }
+
+        spots[rollDice - 1] = true;
+        console.log("status of spots after roll:" + spots);
+
+        playerStacks[currentPlayer]--;
+        document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
+        if (playerStacks[currentPlayer] == 0) {
+          alert(players[currentPlayer] + " is the winner!");
+        }
+        if (firstTurn) {
+          firstTurn == false;
+          document.getElementById('passButton').style.visibility = "visible";
+        }
+      }
+    } else { // 6 was rolled
+      document.getElementById("penny" + rollDice).style.visibility = "visible";
+      setTimeout(function() {
+        document.getElementById("penny" + rollDice).classList.add('slide-out');
+      }, 500);
+      setTimeout(function() {
+        document.getElementById("penny" + rollDice).style.visibility = "hidden";
+        document.getElementById("penny" + rollDice).classList.remove('slide-out');
+      }, 1000);
+
+
+
+      playerStacks[currentPlayer]--;
+      document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
+      if (playerStacks[currentPlayer] == 0) {
+        alert(players[currentPlayer] + " is the winner!");
+      }
+      if (firstTurn) {
+        firstTurn == false;
+        document.getElementById('passButton').style.visibility = "visible";
+      }
+    }
+  });
+
+  document.getElementById('passButton').addEventListener('click', function(){
+    document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+    console.log(currentPlayer + " of " + (players.length - 1));
+    if (currentPlayer == (players.length - 1)) {
+      currentPlayer = 0;
+    } else {
+      currentPlayer++;
+    }
+    console.log(currentPlayer + " of " + (players.length - 1));
+    document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+    firstTurn = true
+    document.getElementById('passButton').style.visibility = "hidden";
+  });
+
+  // while (!gameEnded) {
+  //   for (let y = 0; y < players.length; y++) {
+  //     playersTurn(y);
+  //     if (playerStacks[y] == 0) {
+  //       winner = players[y];
+  //       gameEnded = true;
+  //       break;
+  //     }
+  //   }
+  // }
+
+
+
+      // data.forEach(function (item, index) {
+      //   if (item.movie_name != "blank") {
+      //     document.getElementById("movie-grid").innerHTML += '<div class="item"><div class="movie-poster"><a href="showtimes.html?movie_title=' + encodeURI(item.movie_name) + '&movie_showtimes=' + encodeURI(item.showtimes) + '&movie_poster=' + encodeURI(item.movie_poster_url) + '"><img src="' + item.movie_poster_url + '" alt="' + item.movie_name + '" /></a></div><a href="showtimes.html?movie_title=' + encodeURI(item.movie_name) + '&movie_showtimes=' + encodeURI(item.showtimes) + '&movie_poster=' + encodeURI(data.movie_poster_url) + '"><h2 class="text-dark-color">' + item.movie_name + '</h2></a></div>';
+      //   }
+      // });
+  </script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</html>
