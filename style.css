@@ -40,16 +40,17 @@ a {
 }
 
 .drop-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 0 auto; }
-.drop-spot { text-align: center; background-color: red; }
+.drop-spot { text-align: center; }
 .image-container { overflow: hidden; }
-.dice { font-size: 4rem; line-height: 1; text-align: center; width: 33%; margin: 0 auto;}
+.dice { font-size: 4rem; line-height: 1; width: 95%; text-align: center; margin: 0 auto;}
 img.penny { display: block; width: 80%; margin: 0 auto; }
+img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
 .drop-line {
   margin: 5px auto 10px;
   border: 0;
   height: 3px;
   width: 80%;
-  background: black;
+  background: white;
 }
 .stack-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 0 auto; }
 .stack-spot { font-size: 2rem; text-align: center; background-color: orange; color: black; }
