@@ -21,10 +21,11 @@ a {
 
 /*-------------------- Leaderboard --------------------*/
 .leaderboard {
+  box-sizing: border-box;
   overflow: hidden;
   margin: 20px auto 0;
   padding: 20px 20px 40px;
-  background: brown;
+  background: blue;
   border-radius: 10px;
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
 }
@@ -38,10 +39,10 @@ a {
   margin: 10px 0 0;
 }
 
-.drop-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 40px 0; }
+.drop-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 0 auto; }
 .drop-spot { text-align: center; background-color: red; }
 .image-container { overflow: hidden; }
-.dice { font-size: 4rem; text-align: center; width: 33%; margin: 0 auto;}
+.dice { font-size: 4rem; line-height: 1; text-align: center; width: 33%; margin: 0 auto;}
 img.penny { display: block; width: 80%; margin: 0 auto; }
 .drop-line {
   margin: 5px auto 10px;
@@ -50,7 +51,7 @@ img.penny { display: block; width: 80%; margin: 0 auto; }
   width: 80%;
   background: black;
 }
-.stack-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 40px 0; }
+.stack-wrapper { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 2rem; grid-row-gap: 2rem; margin: 0 auto; }
 .stack-spot { font-size: 2rem; text-align: center; background-color: orange; color: black; }
 .active-player { background-color: green; }
 .slide-out { transform: translateY(100%); transition: transform 1s; }
@@ -63,6 +64,8 @@ img.penny { display: block; width: 80%; margin: 0 auto; }
   margin-top: 50% !important;} */
 .roll-button, .pass-button {
   margin: 0 auto;
+  box-sizing: border-box;
+  width: 95%;
   max-width: 350px;
   background: #880808;
   border-radius: 10px;
@@ -81,13 +84,17 @@ img.penny { display: block; width: 80%; margin: 0 auto; }
 
 @media screen and (max-width: 600px) {
   .leaderboard {
-    max-width: 350px;
-    width: 85% !important;
+    /* max-width: 350px; */
+    width: 95%;
   }
+  .drop-wrapper { grid-column-gap: 0.8rem; grid-row-gap: 0.8rem; width: 95%; margin: 0 auto; }
+  .stack-wrapper { grid-column-gap: 0.8rem; grid-row-gap: 0.8rem; width: 95%; margin: 0 auto; }
+
+
 }
 @media screen and (min-width: 601px) {
   .leaderboard {
     max-width: 800px;
-    width: 85% !important;
+    width: 85%;
   }
 }
