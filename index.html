@@ -129,14 +129,13 @@
   </body>
 
   <script type="text/javascript">
-  var spots = [false, false, false, false, false];
-// var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
-   var players = ["Johnny", "Kate", "Brooke"];
-//  var playerStacks = [10, 10, 10, 10, 10];
-   var playerStacks = [10, 10, 10];
-  for (const [i, stack] of playerStacks.entries()) {
-    document.getElementById('player' + i + '-stack').innerHTML = stack;
-  }
+    const modal = document.getElementById('modal-one');
+    modal.classList.add("open");
+    const exit = document.getElementById("modal-one-exit");
+    exit.addEventListener("click", function (event) {
+      event.preventDefault();
+      modal.classList.remove("open");
+    });
 
 
 
