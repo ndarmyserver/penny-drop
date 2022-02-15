@@ -126,8 +126,6 @@ img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
   color: blue;
   position: relative;
   padding: 30px;
-  width: 50%;
-  max-width: 400px;
   text-align: center;
 }
 .modal-close {
@@ -182,6 +180,7 @@ input[type=text] {
   padding:20px;
   border:0;
   border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.25);
   box-shadow: 0 0 3px 1px rgba(0,0,0,0.25);
   width: 100%;
   margin: 0 auto 20px;
@@ -210,11 +209,20 @@ input[type=text]:focus {
   .drop-wrapper { grid-column-gap: 0.8rem; grid-row-gap: 0.8rem; width: 95%; margin: 0 auto; }
   .stack-wrapper { grid-column-gap: 0.8rem; grid-row-gap: 0.8rem; width: 95%; margin: 0 auto; }
 
+  .modal-container {
+    width: 95%;
+  }
+
 
 }
 @media screen and (min-width: 601px) {
   .leaderboard {
     max-width: 800px;
     width: 85%;
+  }
+
+  .modal-container {
+    width: 50%;
+    max-width: 400px;
   }
 }
