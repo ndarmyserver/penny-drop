@@ -73,171 +73,290 @@
         </div>
         <div class="spacer-large"></div>
         <div class="stack-wrapper">
-          <div id="player0-stack" class="stack-spot"></div>
-          <div id="player1-stack" class="stack-spot"></div>
-          <div id="player2-stack" class="stack-spot"></div>
-          <div id="player3-stack" class="stack-spot"></div>
-          <div id="player4-stack" class="stack-spot"></div>
+          <div id="player0-stack-spot" class="stack-spot">
+            <div id="player0-name" class="player-name"></div>
+            <div id="player0-stack" class="player-stack"></div>
+          </div>
+          <div id="player1-stack-spot" class="stack-spot">
+            <div id="player1-name" class="player-name"></div>
+            <div id="player1-stack" class="player-stack"></div>
+          </div>
+          <div id="player2-stack-spot" class="stack-spot" style="display: none;">
+            <div id="player2-name" class="player-name"></div>
+            <div id="player2-stack" class="player-stack"></div>
+          </div>
+          <div id="player3-stack-spot" class="stack-spot" style="display: none;">
+            <div id="player3-name" class="player-name"></div>
+            <div id="player3-stack" class="player-stack"></div>
+          </div>
+          <div id="player4-stack-spot" class="stack-spot" style="display: none;">
+            <div id="player4-name" class="player-name"></div>
+            <div id="player4-stack" class="player-stack"></div>
+          </div>
         </div>
+    </div>
+    <div class="modal" id="modal-one">
+      <div class="modal-bg modal-exit"></div>
+      <div class="modal-container">
+        <h1>Penny Drop</h1>
+        <div class="spacer"></div>
+        <h2>How many players?</h2>
+        <div class="spacer"></div>
+        <div class="main-container">
+          <div id="minus-button" class="left-col">
+            <ion-icon name="remove-circle-outline" onClick="onKidMinusClick()"></ion-icon>
+          </div>
+          <div class="center-col">
+            <span id="num-of-kid-tickets">2</span>
+          </div>
+          <div id="plus-button" class="right-col">
+            <ion-icon name="add-circle-outline" onClick="onKidPlusClick()"></ion-icon>
+          </div>
+        </div>
+        <div class="spacer-large"></div>
+        <div class="form-container">
+            <input id="player0" name="player1" type="text" placeholder="Player 1 Name">
+            <input id="player1" name="player2" type="text" placeholder="Player 2 Name">
+            <input id="player2" name="player3" type="text" placeholder="Player 3 Name" style="display: none;">
+            <input id="player3" name="player4" type="text" placeholder="Player 4 Name" style="display: none;">
+            <input id="player4" name="player5" type="text" placeholder="Player 5 Name" style="display: none;">
+            <div class="spacer"></div>
+            <div id="submitButton" class="submit-button">SUBMIT</div>
+        </div>
+        <button id="modal-one-exit" class="modal-close modal-exit">X</button>
+      </div>
     </div>
   </body>
 
   <script type="text/javascript">
-  var spots = [false, false, false, false, false];
-  var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
-//   var players = ["Johnny", "Daddy"];
-  var playerStacks = [10, 10, 10, 10, 10];
-//   var playerStacks = [10, 10];
-  for (const [i, stack] of playerStacks.entries()) {
-    document.getElementById('player' + i + '-stack').innerHTML = stack;
-  }
-
-  var gameEnded = false;
-  var currentPlayer = 0;
-  document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
-  var firstTurn = true;
-  document.getElementById('passButton').style.visibility = "hidden";
-
-  function rollDiceAnimation() {
-    // document.getElementById('dice').innerHTML = (Math.floor(Math.random() * 6) + 1);
-    var randomNumber = (Math.floor(Math.random() * 6) + 1);
-    document.getElementById('dice-img').src="img/dice-" + randomNumber + ".png";
-    document.getElementById('dice-img').alt="Dice - " + randomNumber;
-    return new Promise((resolve) => {
-      setTimeout(function() { resolve(); }, 20);
+    const modal = document.getElementById('modal-one');
+    modal.classList.add("open");
+    const exit = document.getElementById("modal-one-exit");
+    exit.addEventListener("click", function (event) {
+      event.preventDefault();
+      modal.classList.remove("open");
     });
-  }
 
-  function afterRolling() {
 
-    var rollDice = (Math.floor(Math.random() * 6) + 1);
-    document.getElementById('dice-img').src = "img/dice-" + rollDice + ".png";
-    document.getElementById('dice-img').alt="Dice - " + rollDice;
 
-    if (rollDice >= 1 && rollDice <= 5) {
-      if (spots[rollDice - 1]) {
-        const numOfPennies = spots.filter(Boolean).length;
-        playerStacks[currentPlayer] += numOfPennies;
-        document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
-        for (let j = 0; j < 5; j++) {
-          if (spots[j]) {
-            document.getElementById("penny" + (j+1)).classList.add('slide-up');
-          }
+    var kid_tickets = 2;
+
+    function onKidMinusClick() {
+      if(kid_tickets > 2) {
+        kid_tickets -= 1;
+        document.getElementById("player" + (kid_tickets)).style.display = "none";
+        if (kid_tickets == 2) {
+          document.getElementById("minus-button").style.visibility = "hidden";
         }
-        setTimeout(function() {
-          for (let j = 0; j < 5; j++) {
-            document.getElementById("penny" + (j+1)).style.visibility = "hidden"
-            if (spots[j]) {
-              document.getElementById("penny" + (j+1)).classList.remove('slide-up');
-            }
-            spots[j] = false;
-          }
-        }, 1000);
-
-
-        // Turn is over and advance to next player
-        document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
-        console.log(currentPlayer + " of " + (players.length - 1));
-        if (currentPlayer == (players.length - 1)) {
-          currentPlayer = 0;
-        } else {
-          currentPlayer++;
+        if (kid_tickets == 4) {
+          document.getElementById("plus-button").style.visibility = "visible";
         }
-        console.log(currentPlayer + " of " + (players.length - 1));
-        document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
-        document.getElementById('passButton').style.visibility = "hidden";
-        firstTurn = true;
-
-
       } else {
-        var x = document.getElementById("penny" + rollDice);
-        if (x.style.visibility === "hidden") {
-          x.style.visibility = "visible";
-        } else {
-          x.style.visibility = "hidden";
-        }
+        kid_tickets = 2;
+      }
+      document.getElementById("num-of-kid-tickets").innerText = kid_tickets;
+    };
 
-        spots[rollDice - 1] = true;
-        console.log("status of spots after roll:" + spots);
-
-        playerStacks[currentPlayer]--;
-        document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
-        if (playerStacks[currentPlayer] == 0) {
-          alert(players[currentPlayer] + " is the winner!");
+    function onKidPlusClick() {
+      if(kid_tickets < 5) {
+        kid_tickets += 1;
+        document.getElementById("player" + (kid_tickets - 1)).style.display = "block";
+        if (kid_tickets == 5) {
+          document.getElementById("plus-button").style.visibility = "hidden";
         }
-        if (firstTurn) {
-          firstTurn == false;
-          document.getElementById('passButton').style.visibility = "visible";
+        document.getElementById("num-of-kid-tickets").innerText = kid_tickets;
+        if (kid_tickets > 2) {
+          document.getElementById("minus-button").style.visibility = "visible";
         }
       }
-    } else { // 6 was rolled
-      document.getElementById("penny" + rollDice).style.visibility = "visible";
+    };
+
+    var players = [];
+    var playerStacks = [];
+    var gameEnded = false;
+    var currentPlayer = 0;
+    var firstTurn = true;
+    var spots = [false, false, false, false, false];
+
+
+
+    document.getElementById('submitButton').addEventListener('click', function(){
+
+      for (var l = 0; l < 5; l++) {
+        players.push(document.getElementById('player' + l).value)
+      }
+      console.log(players);
+
+      for (var m = 0; m < kid_tickets; m++) {
+        if (players[m] == "") {
+          alert("Player " + (m + 1) + "'s name must be filled out");
+          players = []
+          return false;
+        } else {
+
+        }
+      }
+
+      players = players.filter(element => {
+        return element !== '';
+      });
+      console.log(players);
+
+      players.forEach(element => {
+        playerStacks.push(10);
+      });
+      console.log(playerStacks);
+
+        modal.classList.remove("open");
+playGame();
+
+    });
+
+  // var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
+//   var players = ["Johnny", "Daddy"];
+  // var playerStacks = [10, 10, 10, 10, 10];
+//   var playerStacks = [10, 10];
+function rollDiceAnimation() {
+  // document.getElementById('dice').innerHTML = (Math.floor(Math.random() * 6) + 1);
+  var randomNumber = (Math.floor(Math.random() * 6) + 1);
+  document.getElementById('dice-img').src="img/dice-" + randomNumber + ".png";
+  document.getElementById('dice-img').alt="Dice - " + randomNumber;
+  return new Promise((resolve) => {
+    setTimeout(function() { resolve(); }, 20);
+  });
+}
+
+function afterRolling() {
+
+  var rollDice = (Math.floor(Math.random() * 6) + 1);
+  document.getElementById('dice-img').src = "img/dice-" + rollDice + ".png";
+  document.getElementById('dice-img').alt="Dice - " + rollDice;
+
+  if (rollDice >= 1 && rollDice <= 5) {
+    if (spots[rollDice - 1]) {
+      const numOfPennies = spots.filter(Boolean).length;
+      playerStacks[currentPlayer] += numOfPennies;
+      document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
+      for (let j = 0; j < 5; j++) {
+        if (spots[j]) {
+          document.getElementById("penny" + (j+1)).classList.add('slide-up');
+        }
+      }
       setTimeout(function() {
-        document.getElementById("penny" + rollDice).classList.add('slide-out');
-      }, 500);
-      setTimeout(function() {
-        document.getElementById("penny" + rollDice).style.visibility = "hidden";
-        document.getElementById("penny" + rollDice).classList.remove('slide-out');
+        for (let j = 0; j < 5; j++) {
+          document.getElementById("penny" + (j+1)).style.visibility = "hidden"
+          if (spots[j]) {
+            document.getElementById("penny" + (j+1)).classList.remove('slide-up');
+          }
+          spots[j] = false;
+        }
       }, 1000);
 
 
+      // Turn is over and advance to next player
+      document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
+      console.log(currentPlayer + " of " + (players.length - 1));
+      if (currentPlayer == (players.length - 1)) {
+        currentPlayer = 0;
+      } else {
+        currentPlayer++;
+      }
+      document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
+      document.getElementById('passButton').style.visibility = "hidden";
+      firstTurn = true;
+
+
+    } else {
+      var x = document.getElementById("penny" + rollDice);
+      if (x.style.visibility === "hidden") {
+        x.style.visibility = "visible";
+      } else {
+        x.style.visibility = "hidden";
+      }
+
+      spots[rollDice - 1] = true;
 
       playerStacks[currentPlayer]--;
       document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
       if (playerStacks[currentPlayer] == 0) {
-        alert(players[currentPlayer] + " is the winner!");
+        setTimeout(function() {
+          alert(players[currentPlayer] + " is the winner!");
+        }, 1000);
       }
       if (firstTurn) {
         firstTurn == false;
         document.getElementById('passButton').style.visibility = "visible";
       }
     }
-  }
+  } else { // 6 was rolled
+    document.getElementById("penny" + rollDice).style.visibility = "visible";
+    setTimeout(function() {
+      document.getElementById("penny" + rollDice).classList.add('slide-out');
+    }, 500);
+    setTimeout(function() {
+      document.getElementById("penny" + rollDice).style.visibility = "hidden";
+      document.getElementById("penny" + rollDice).classList.remove('slide-out');
+    }, 1000);
 
-async function rollButtonPressed() {
-  for(var k = 0; k < 25; k++){
-    await rollDiceAnimation();
+
+
+    playerStacks[currentPlayer]--;
+    document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
+    if (playerStacks[currentPlayer] == 0) {
+      setTimeout(function() {
+        alert(players[currentPlayer] + " is the winner!");
+      }, 1000);
+    }
+    if (firstTurn) {
+      firstTurn == false;
+      document.getElementById('passButton').style.visibility = "visible";
+    }
   }
-  afterRolling();
 }
 
+async function rollButtonPressed() {
+for(var k = 0; k < 25; k++){
+  await rollDiceAnimation();
+}
+afterRolling();
+}
+
+
+
+function playGame(){
+  for (const [i, name] of players.entries()) {
+    console.log(name);
+    document.getElementById('player' + i + '-stack-spot').style.display = "block";
+    document.getElementById('player' + i + '-name').innerHTML = name;
+    document.getElementById('player' + i + '-stack').innerHTML = playerStacks[i];
+
+  }
+
+  // for (const [i, stack] of playerStacks.entries()) {
+  //   document.getElementById('player' + i + '-stack').innerHTML = stack;
+  // }
+
+
+  document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
+  document.getElementById('passButton').style.visibility = "hidden";
 
   document.getElementById('rollButton').addEventListener('click', function(){
     rollButtonPressed();
   });
 
   document.getElementById('passButton').addEventListener('click', function(){
-    document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
-    console.log(currentPlayer + " of " + (players.length - 1));
+    document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
     if (currentPlayer == (players.length - 1)) {
       currentPlayer = 0;
     } else {
       currentPlayer++;
     }
-    console.log(currentPlayer + " of " + (players.length - 1));
-    document.getElementById('player' + currentPlayer + '-stack').classList.toggle("active-player");
+    document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
     firstTurn = true
     document.getElementById('passButton').style.visibility = "hidden";
   });
 
-  // while (!gameEnded) {
-  //   for (let y = 0; y < players.length; y++) {
-  //     playersTurn(y);
-  //     if (playerStacks[y] == 0) {
-  //       winner = players[y];
-  //       gameEnded = true;
-  //       break;
-  //     }
-  //   }
-  // }
-
-
-
-      // data.forEach(function (item, index) {
-      //   if (item.movie_name != "blank") {
-      //     document.getElementById("movie-grid").innerHTML += '<div class="item"><div class="movie-poster"><a href="showtimes.html?movie_title=' + encodeURI(item.movie_name) + '&movie_showtimes=' + encodeURI(item.showtimes) + '&movie_poster=' + encodeURI(item.movie_poster_url) + '"><img src="' + item.movie_poster_url + '" alt="' + item.movie_name + '" /></a></div><a href="showtimes.html?movie_title=' + encodeURI(item.movie_name) + '&movie_showtimes=' + encodeURI(item.showtimes) + '&movie_poster=' + encodeURI(data.movie_poster_url) + '"><h2 class="text-dark-color">' + item.movie_name + '</h2></a></div>';
-      //   }
-      // });
+}
   </script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
