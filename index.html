@@ -123,7 +123,7 @@
             <div class="spacer"></div>
             <div id="submitButton" class="submit-button">SUBMIT</div>
         </div>
-        <button id="modal-one-exit" class="modal-close modal-exit">X</button>
+        <!-- <button id="modal-one-exit" class="modal-close modal-exit">X</button> -->
       </div>
     </div>
   </body>
@@ -211,7 +211,7 @@
 playGame();
 
     });
-
+// For testing before implementing number of player modal
   // var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
 //   var players = ["Johnny", "Daddy"];
   // var playerStacks = [10, 10, 10, 10, 10];
@@ -331,11 +331,6 @@ function playGame(){
     document.getElementById('player' + i + '-stack').innerHTML = playerStacks[i];
 
   }
-
-  // for (const [i, stack] of playerStacks.entries()) {
-  //   document.getElementById('player' + i + '-stack').innerHTML = stack;
-  // }
-
 
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
   document.getElementById('passButton').style.visibility = "hidden";
