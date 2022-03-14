@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'EcuyerDAX';
-    src:url('EcuyerDAX.ttf.woff') format('woff'),
-        url('EcuyerDAX.ttf.svg#EcuyerDAX') format('svg'),
-        url('EcuyerDAX.ttf.eot'),
-        url('EcuyerDAX.ttf.eot?#iefix') format('embedded-opentype');
+    src:url('fonts/EcuyerDAX.ttf.woff') format('woff'),
+        url('fonts/EcuyerDAX.ttf.svg#EcuyerDAX') format('svg'),
+        url('fonts/EcuyerDAX.ttf.eot'),
+        url('fonts/EcuyerDAX.ttf.eot?#iefix') format('embedded-opentype');
         font-weight: normal;
         font-style: normal;
 }
