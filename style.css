@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'EcuyerDAX';
+    font-style: normal;
+    font-weight: normal;
     src:url('fonts/EcuyerDAX.ttf.woff') format('woff'),
         url('fonts/EcuyerDAX.ttf.svg#EcuyerDAX') format('svg'),
         url('fonts/EcuyerDAX.ttf.eot'),
         url('fonts/EcuyerDAX.ttf.eot?#iefix') format('embedded-opentype');
-        font-weight: normal;
-        font-style: normal;
 }
 html {
   box-sizing: border-box;
@@ -201,7 +201,6 @@ img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
 
 .modal-bg {
   position: absolute;
-  margin-top: 101px;
   background: #eaf2dc;
   width: 100%;
   height: 100%;
@@ -403,26 +402,27 @@ input[type=text]:focus {
     width: 100%;
     height: 100%;
   }
+
   .game-area {
     width: 95%;
   }
+
   .drop-wrapper {
     grid-column-gap: 0.8rem;
     grid-row-gap: 0.8rem;
     margin: 0 auto;
   }
+
   .stack-wrapper {
     grid-column-gap: 0.8rem;
     grid-row-gap: 0.8rem;
     margin: 0 auto;
-
   }
 
   .modal {
     display: flex;
     justify-content: center;
     align-items: center;
-
   }
 
   .small-name-font {
