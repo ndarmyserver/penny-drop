@@ -95,7 +95,6 @@ function backButtonClicked() {
     }
   }
   setupProgression -= 1;
-  console.log(setupProgression)
 }
 
 document.getElementById('backButton').addEventListener('click', () => backButtonClicked());
@@ -115,8 +114,6 @@ function nextButtonClicked() {
       document.getElementById('nextButton').style.display = "none";
       document.getElementById('playButton').style.display = "block";
     }
-    console.log(setupProgression)
-
   }
 }
 
@@ -131,7 +128,6 @@ function setupGame() {
     for (var l = 0; l < 5; l++) {
       players.push(document.getElementById('player' + l).value)
     }
-    console.log(players);
 
     players = players.filter(element => {
       return element !== '';
@@ -211,6 +207,24 @@ function showTurnSummary(turnCurrentPlayer, turnNextPlayer, passOrRoll) {
   }
 }
 
+function turnOver(passOrRoll) {
+  var prevPlayer = currentPlayer;
+  turnEndingStack = playerStacks[currentPlayer];
+  if (currentPlayer == (players.length - 1)) {
+    currentPlayer = 0;
+    rounds++
+  } else {
+    currentPlayer++;
+  }
+  document.getElementById('passButton').style.visibility = "hidden";
+  firstTurn = true
+  setTimeout(function() {
+    showTurnSummary(players[prevPlayer], players[currentPlayer], passOrRoll);
+    document.getElementById(`player${prevPlayer}-name`).classList.toggle("active-player");
+    document.getElementById(`player${currentPlayer}-name`).classList.toggle("active-player");
+  }, (passOrRoll == "roll" ? 1000 : 100));
+}
+
 function rollDiceAnimation() {
   var randomNumber = (Math.floor(Math.random() * 6) + 1);
   document.getElementById('dice-img').src = "img/dice-" + randomNumber + ".png";
@@ -258,24 +272,8 @@ function afterRolling() {
         }
       }, 1000);
 
-      // Turn is over and advance to next player
-      document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
-      turnEndingStack = playerStacks[currentPlayer];
-      if (currentPlayer == (players.length - 1)) {
-        setTimeout(function() {
-          showTurnSummary(players[currentPlayer], players[0], "roll");
-          currentPlayer = 0;
-        }, 1000);
-        rounds++;
-      } else {
-        setTimeout(function() {
-          showTurnSummary(players[currentPlayer], players[currentPlayer + 1], "roll");
-          currentPlayer++;
-        }, 1000);
-      }
-      document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
-      document.getElementById('passButton').style.visibility = "hidden";
-      firstTurn = true;
+      // Turn is over
+      turnOver("roll");
 
 
     } else {
@@ -346,26 +344,7 @@ async function rollButtonPressed() {
 }
 
 function passButtonPressed() {
-  document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
-  turnEndingStack = playerStacks[currentPlayer];
-  if (currentPlayer == (players.length - 1)) {
-    setTimeout(function() {
-      showTurnSummary(players[currentPlayer], players[0], "pass");
-      currentPlayer = 0;
-    }, 100);
-    rounds++
-  } else {
-    console.log(currentPlayer);
-    console.log(players[currentPlayer]);
-    console.log(players[currentPlayer + 1]);
-    setTimeout(function() {
-      showTurnSummary(players[currentPlayer], players[currentPlayer + 1], "pass");
-      currentPlayer++;
-    }, 100);
-  }
-  document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
-  firstTurn = true
-  document.getElementById('passButton').style.visibility = "hidden";
+  turnOver("pass");
 }
 
 function playGame() {
@@ -438,7 +417,8 @@ document.getElementById('rematchButton').addEventListener('click', () => {
 });
 
 document.getElementById('win-close-button').addEventListener('click', () => modalWin.classList.remove("open"));
-document.getElementById('turn-close-button').addEventListener('click', () => modalTurnSummary.classList.remove("open"));
+
+// document.getElementById('turn-close-button').addEventListener('click', () => modalTurnSummary.classList.remove("open"));
 
 document.getElementById('newGameButton').addEventListener('click', () => location.reload());
 
