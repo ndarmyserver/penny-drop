@@ -12,10 +12,13 @@ var rounds = 1;
 var setupProgression = 0;
 var numOfPlayers = 2;
 var turnSummary = true;
+var showSuccessRate = true;
+var showInstructions = false;
 
 
 
 const modalSetup = document.getElementById('modal-setup');
+const modalInstruction = document.getElementById('modal-instruction');
 const modalWin = document.getElementById('modal-win');
 const modalSettings = document.getElementById('modal-settings');
 const modalTurnSummary = document.getElementById('modal-turn-summary');
@@ -23,11 +26,23 @@ const modalTurnSummary = document.getElementById('modal-turn-summary');
 // Open Game Setup modal on page load
 modalSetup.classList.add("open");
 
-function settingsButtonClicked() {
-  modalSettings.classList.add("open");
-}
+function openModal(modal) {
+  // Note: fixed elements will also need the margin adjustment (like a fixed header, if you have one).
+  var scrollBarWidth = window.innerWidth - document.body.offsetWidth;
+  document.body.style.margin = '0px ' + scrollBarWidth + 'px 0px 0px';
+  document.body.style.overflow = 'hidden';
+  modal.style.display = 'block';
+};
 
-document.getElementById('settings-button').addEventListener('click', () => settingsButtonClicked());
+function closeModal(modal) {
+	document.body.style.margin = '';
+  document.body.style.overflow = '';
+  modal.style.display = 'none';
+};
+
+
+
+document.getElementById('settings-button').addEventListener('click', () => modalSettings.classList.add("open"));
 
 
 function playerMinusButtonClicked() {
@@ -61,13 +76,40 @@ function playerPlusButtonClick() {
   }
 };
 
-document.getElementById('plus-button').addEventListener('click', () => playerPlusButtonClick());
+document.getElementById("plus-button").addEventListener('click', () => playerPlusButtonClick());
+
+function instructionButtonClicked() {
+  showInstructions = !showInstructions;
+  if (showInstructions) {
+    document.getElementById("instructionBody").style.display = "block";
+    document.getElementById("instructionSpacer").style.display = "block";
+    document.getElementById('instructionButton').innerHTML = 'How to Play <ion-icon name="caret-up-circle-outline" class="ion-expand"></ion-icon>';
+  } else {
+    document.getElementById("instructionBody").style.display = "none";
+    document.getElementById("instructionSpacer").style.display = "none";
+    document.getElementById('instructionButton').innerHTML = 'How to Play <ion-icon name="caret-down-circle-outline" class="ion-expand"></ion-icon>';
+
+  }
+}
+
+// document.getElementById('instructionButton').addEventListener('click', () => instructionButtonClicked());
+document.getElementById('instructionButton').addEventListener('click', () => openModal(document.getElementById('new-modal')));
+
+
+
+
+// document.getElementById('instructionButton').addEventListener('click', () => {
+//   document.querySelector("body").style.overflow = "hidden";
+//   modalInstruction.classList.add("open");
+// });
+
 
 
 function firstNextButtonClicked() {
   setupProgression = 1;
   document.getElementById('setupPrompt').style.display = "none";
   document.getElementById('firstNextButton').style.display = "none";
+  document.getElementById('instructionButtonWrapper').style.display = "none";
   document.getElementById('setupButtonWrapper').style.display = "grid";
   document.getElementById('playerNames').style.display = "block";
   document.getElementById('player0').style.display = "block";
@@ -84,6 +126,7 @@ function backButtonClicked() {
     document.getElementById('setupError').style.visibility = "hidden";
     document.getElementById('setupPrompt').style.display = "block";
     document.getElementById('firstNextButton').style.display = "block";
+    document.getElementById('instructionButtonWrapper').style.display = "block";
   } else {
     document.getElementById('setupError').style.visibility = "hidden";
     document.getElementById('player' + (setupProgression - 1)).style.display = "none";
@@ -177,6 +220,7 @@ function setupGame() {
       }
     }
     modalSetup.classList.remove("open");
+    document.querySelector("body").style.overflow = "auto";
     playGame();
   }
 }
@@ -184,7 +228,6 @@ function setupGame() {
 document.getElementById('playButton').addEventListener('click', () => setupGame());
 
 function showTurnSummary(turnCurrentPlayer, turnNextPlayer, passOrRoll) {
-  console.log(turnNextPlayer);
   if (turnSummary) {
     const turnResult = turnEndingStack - turnStartingStack;
     if (turnResult > 0) {
@@ -236,6 +279,13 @@ function rollDiceAnimation() {
   });
 }
 
+function calculateSuccessPercent(spotAfterRolling) {
+  const successPercent = Math.round(((5 - spotAfterRolling.filter(Boolean).length) / 5 * 100));
+  document.getElementById('successRate').innerHTML = (showSuccessRate ? `Chance of success: ${successPercent}%` : "&nbsp;");
+  toggleSuccessClass(successPercent);
+
+}
+
 function afterRolling() {
   var rollDice = (Math.floor(Math.random() * 6) + 1);
   allRolls.push(rollDice);
@@ -270,6 +320,7 @@ function afterRolling() {
           }
           spots[j] = false;
         }
+        calculateSuccessPercent(spots);
       }, 1000);
 
       // Turn is over
@@ -285,6 +336,7 @@ function afterRolling() {
       }
 
       spots[rollDice - 1] = true;
+      calculateSuccessPercent(spots);
 
       playerStacks[currentPlayer]--;
       document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
@@ -323,6 +375,18 @@ function afterRolling() {
   }
 }
 
+function toggleSuccessClass(successPercent) {
+  if (successPercent < 50) {
+    if (!document.getElementById("successRate").classList.contains('result-bad')) {
+      document.getElementById("successRate").classList.toggle('result-bad');
+    }
+  } else {
+    if (document.getElementById("successRate").classList.contains('result-bad')) {
+      document.getElementById("successRate").classList.toggle('result-bad');
+    }
+  }
+}
+
 async function rollButtonPressed() {
   document.getElementById('rollButton').style.pointerEvents = 'none';
   document.getElementById('passButton').style.pointerEvents = 'none';
@@ -330,16 +394,22 @@ async function rollButtonPressed() {
   document.getElementById('passButton').style.background = 'rgba(144,166,138,0.5)';
 
   console.log("wait to roll again")
+  console.log(spots);
   for (var k = 0; k < 25; k++) {
     await rollDiceAnimation();
   }
   afterRolling();
+  console.log("immediately afterRolling function");
+  console.log(spots);
   setTimeout(function() {
+    console.log("inside of timeout");
+    console.log(spots);
     document.getElementById('rollButton').style.pointerEvents = 'auto';
     document.getElementById('passButton').style.pointerEvents = 'auto';
     document.getElementById('rollButton').style.background = '#D98D62';
     document.getElementById('passButton').style.background = '#90a68a';
     console.log("ready to roll again")
+    console.log(spots);
   }, 500);
 }
 
@@ -376,6 +446,8 @@ function restartCurrentGame() {
   document.getElementById('passButton').style.visibility = "hidden";
   document.getElementById('passButton').style.display = "block";
   document.getElementById('showWinButton').style.display = "none";
+  document.getElementById('successRate').innerText = (showSuccessRate ? "Chance of success: 100%" : "");
+  toggleSuccessClass(100);
   // Hide all penny images
   var imgElements = document.getElementsByClassName('penny');
   Array.from(imgElements).forEach(element => element.style.visibility = "hidden");
@@ -411,12 +483,24 @@ function turnSummaryCheckboxClicked() {
 
 document.getElementById('turnSummaryCheckbox').addEventListener('click', () => turnSummaryCheckboxClicked());
 
+function successRateCheckboxClicked() {
+  showSuccessRate = !showSuccessRate;
+  document.getElementById('successRateCheckbox').innerHTML = (showSuccessRate ? '<ion-icon name="checkmark-outline"></ion-icon>' : "");
+  const successPercent = Math.round(((5 - spots.filter(Boolean).length) / 5 * 100));
+  document.getElementById('successRate').innerHTML = (showSuccessRate ? `Chance of success: ${successPercent}%` : "&nbsp;");
+  toggleSuccessClass(successPercent);
+}
+
+document.getElementById('successRateCheckbox').addEventListener('click', () => successRateCheckboxClicked());
+
 document.getElementById('rematchButton').addEventListener('click', () => {
   restartCurrentGame();
   modalWin.classList.remove("open");
 });
 
 document.getElementById('win-close-button').addEventListener('click', () => modalWin.classList.remove("open"));
+
+document.getElementById('instruction-close-button').addEventListener('click', () => closeModal(document.getElementById('new-modal')));
 
 // document.getElementById('turn-close-button').addEventListener('click', () => modalTurnSummary.classList.remove("open"));
 

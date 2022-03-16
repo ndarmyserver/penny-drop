@@ -87,7 +87,9 @@
           <div id="passButton" class="pass-button" style="visibility: hidden;">PASS</div>
           <div id="rollButton" class="roll-button">ROLL</div>
         </div>
-        <div class="spacer-large"></div>
+        <div class="spacer"></div>
+        <div id="successRate" class="success-rate">Chance of Success: 100%</div>
+        <div class="spacer"></div>
         <div id="stackWrapper" class="stack-wrapper">
           <div id="player0-stack-spot" class="stack-spot">
             <div id="player0-name" class="player-name"></div>
@@ -151,11 +153,35 @@
         </div>
         <div class="spacer-setup-error"></div>
         <div id="firstNextButton" class="first-next-button">NEXT <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon></div>
+        <div id="instructionButtonWrapper" class="insruction-wrapper">
+          <div class="spacer-large"></div>
+          <div id="instructionButton">How to Play <ion-icon name="chevron-forward-circle-outline" class="ion-expand"></ion-icon></div>
+        </div>
         <div id="setupButtonWrapper" class="setup-button-wrapper" style="display: none;">
           <div id="backButton" class="back-button">
             <ion-icon name="arrow-back-outline" class="ion-arrows"></ion-icon> BACK</div> <div id="nextButton" class="next-button">NEXT <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon>
           </div>
           <div id="playButton" class="play-button" style="display: none;">PLAY <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="new-modal" class="modal-outer">
+      <div class="title-area">
+        <h1>Penny Drop</h1>
+      </div>
+      <div class="modal-inner">
+        <div id="instructionBody" class="instruction-body">
+          <ion-icon name="close-circle-outline" class="ion-instruction-close" id="instruction-close-button"></ion-icon>
+          <h2>Instructions</h2>
+          <p>Everyone starts with 10 pennies.</p>
+          <p>Your goal is to be the first one to get rid of all your pennies.</p>
+          <p>On your turn you have to role at least once.</p>
+          <p>When you roll:</p>
+          <p>- If the number spot on the board matching the dice is open, place one of your pennies there.</p>
+          <p>- If not, pick up all the pennies on the board, and your turn is over.</p>
+          <p>- The 6 spot is alway open to “drop” a penny in.</p>
+          <p>If you didn’t have to pick up the pennies on your first roll, you can choose to continue rolling or end your turn.</p>
         </div>
       </div>
     </div>
@@ -166,6 +192,10 @@
         <div class="spacer-large"></div>
         <div class="setting-option">
           <div id="turnSummaryCheckbox" class="setting-checkbox"><ion-icon name="checkmark-outline"></ion-icon></div><div class="setting-checkbox-label">Show Turn Summary</div>
+        </div>
+        <div class="spacer-large"></div>
+        <div class="setting-option">
+          <div id="successRateCheckbox" class="setting-checkbox"><ion-icon name="checkmark-outline"></ion-icon></div><div class="setting-checkbox-label">Show Success Rate</div>
         </div>
         <div class="spacer-large"></div>
         <div id="settingsRematchButton" class="rematch-button">RESTART <ion-icon name="refresh-outline" class="ion-rematch"></ion-icon></div>
