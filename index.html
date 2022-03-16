@@ -23,8 +23,11 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div class="title-area">
+      <h1>Penny Drop</h1>
+    </div>
     <div class="wrapper">
-      <div class="leaderboard">
+      <div class="game-area">
         <div class="drop-wrapper">
           <div class="drop-spot">
             <div class="image-container">
@@ -108,11 +111,12 @@
         </div>
       </div>
     </div>
-    <div class="modal" id="modal-one">
+    <div class="settings">
+      <ion-icon name="settings-outline" onClick="onSettingsClick()"></ion-icon>
+    </div>
+    <div class="modal" id="modal-setup">
       <div class="modal-bg modal-exit"></div>
       <div class="modal-container">
-        <h1>Penny Drop</h1>
-        <div class="spacer-large"></div>
         <div id="setupPrompt">
           <h2>How many players?</h2>
           <div class="spacer"></div>
@@ -129,33 +133,81 @@
           </div>
         </div>
         <div class="player-names-form-container">
-          <input id="player0" name="player1" type="text" placeholder="Player 1 Name" style="display: none;">
-          <input id="player1" name="player2" type="text" placeholder="Player 2 Name" style="display: none;">
-          <input id="player2" name="player3" type="text" placeholder="Player 3 Name" style="display: none;">
-          <input id="player3" name="player4" type="text" placeholder="Player 4 Name" style="display: none;">
-          <input id="player4" name="player5" type="text" placeholder="Player 5 Name" style="display: none;">
+          <h3 id="playerNames" style="display: none;">Enter Player Names</h3>
+          <div class="spacer"></div>
+          <input id="player0" name="player1" type="text" placeholder="Player 1" style="display: none;">
+          <input id="player1" name="player2" type="text" placeholder="Player 2" style="display: none;">
+          <input id="player2" name="player3" type="text" placeholder="Player 3" style="display: none;">
+          <input id="player3" name="player4" type="text" placeholder="Player 4" style="display: none;">
+          <input id="player4" name="player5" type="text" placeholder="Player 5" style="display: none;">
         </div>
         <div id="setupError" class="setup-error" style="visibility: hidden;">
           <p>Player's name can not be blank.</p>
         </div>
         <div class="spacer-setup-error"></div>
-        <div id="firstNextButton" class="first-next-button">NEXT ></div>
+        <div id="firstNextButton" class="first-next-button">NEXT <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon></div>
         <div id="setupButtonWrapper" class="setup-button-wrapper" style="display: none;">
           <div id="backButton" class="back-button">
-            < BACK</div> <div id="nextButton" class="next-button">NEXT >
+            <ion-icon name="arrow-back-outline" class="ion-arrows"></ion-icon> BACK</div> <div id="nextButton" class="next-button">NEXT <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon>
           </div>
-          <div id="playButton" class="play-button" style="display: none;">PLAY ></div>
+          <div id="playButton" class="play-button" style="display: none;">PLAY <ion-icon name="arrow-forward-outline" class="ion-arrows"></ion-icon></div>
         </div>
+        <!-- <button id="modal-one-exit" class="modal-close modal-exit">X</button> -->
+      </div>
+    </div>
+    <div class="modal" id="modal-settings">
+      <div class="modal-settings-bg modal-exit"></div>
+      <div class="modal-container">
+        <div id="settingsResumeButton" class="resume-button"><ion-icon name="arrow-back-outline" class="ion-rematch"></ion-icon> RESUME</div>
+        <div class="spacer-large"></div>
+        <div id="settingsRematchButton" class="rematch-button">RESTART <ion-icon name="refresh-outline" class="ion-rematch"></ion-icon></div>
+        <div class="spacer-large"></div>
+        <div id="settingsNewGameButton" class="new-game-button">NEW GAME</div>
         <!-- <button id="modal-one-exit" class="modal-close modal-exit">X</button> -->
       </div>
     </div>
     <div class="modal" id="modal-win">
       <div class="modal-winner-bg modal-exit"></div>
       <div class="modal-container">
+        <ion-icon name="close-circle-outline" class="ion-win-close" onClick="onWinCloseClick()"></ion-icon>
         <h1 id="winner" class="winner"></h1>
         <h2>is the winner!</h2>
         <div class="spacer-large"></div>
-        <div id="rematchButton" class="rematch-button">REMATCH</div>
+        <div class="win-stats">
+          <h2>Game Stats</h2>
+          <div class="spacer-small"></div>
+          <p id="winRounds"></p>
+          <div class="spacer-small"></div>
+          <p>Roll Distributions</p>
+          <div class="spacer-extra-small"></div>
+          <div class="win-distribution-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                  <th>6</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="win1"></td>
+                  <td id="win2"></td>
+                  <td id="win3"></td>
+                  <td id="win4"></td>
+                  <td id="win5"></td>
+                  <td id="win6"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="spacer-small"></div>
+        </div>
+        <div class="spacer-large"></div>
+        <div id="rematchButton" class="rematch-button">REMATCH <ion-icon name="refresh-outline" class="ion-rematch"></ion-icon></div>
         <div class="spacer-large"></div>
         <div id="newGameButton" class="new-game-button">NEW GAME</div>
         <!-- <button id="modal-one-exit" class="modal-close modal-exit">X</button> -->
@@ -164,15 +216,41 @@
   </body>
 
   <script type="text/javascript">
-    const modal = document.getElementById('modal-one');
-    modal.classList.add("open");
+
+    var players = [];
+    var playerStacks = [];
+    var gameEnded = false;
+    var currentPlayer = 0;
+    var firstTurn = true;
+    var spots = [false, false, false, false, false];
+    var allRolls = [];
+    var rounds = 1;
+    var setupProgression = 0;
+
+    const modalSetup = document.getElementById('modal-setup');
     const modalWin = document.getElementById('modal-win');
+    const modalSettings = document.getElementById('modal-settings');
+
+    // Open Game Setup modal on page load
+    modalSetup.classList.add("open");
+
+    function onSettingsClick() {
+      modalSettings.classList.add("open");
+    }
 
     function displayWinner(winner) {
+      document.getElementById('rollButton').style.visibility = "hidden";
+      document.getElementById('passButton').style.visibility = "hidden";
       document.getElementById("winner").innerText = winner;
       console.log("all rolls: " + allRolls);
+      document.getElementById("winRounds").innerText = `Rounds: ${rounds}`
+      for (x = 1; x < 7; x++) {
+        console.log(allRolls.length);
+        console.log(allRolls.filter((v) => (v === x)).length);
+        console.log((allRolls.filter((v) => (v === x)).length) / allRolls.length);
+        document.getElementById("win" + x).innerText = `${Math.round((allRolls.filter((v) => (v === x)).length / allRolls.length) * 100)}%`
+      }
       modalWin.classList.add("open");
-
     }
     // const exit = document.getElementById("modal-one-exit");
     // exit.addEventListener("click", function (event) {
@@ -212,21 +290,12 @@
       }
     };
 
-    var players = [];
-    var playerStacks = [];
-    var gameEnded = false;
-    var currentPlayer = 0;
-    var firstTurn = true;
-    var spots = [false, false, false, false, false];
-    var allRolls = []
-    var setupProgression = 0;
-
-
     document.getElementById('firstNextButton').addEventListener('click', function() {
       setupProgression = 1;
       document.getElementById('setupPrompt').style.display = "none";
       document.getElementById('firstNextButton').style.display = "none";
       document.getElementById('setupButtonWrapper').style.display = "grid";
+      document.getElementById('playerNames').style.display = "block";
       document.getElementById('player0').style.display = "block";
       document.getElementById('player0').focus();
       console.log("kid tickets: " + kid_tickets)
@@ -235,6 +304,7 @@
 
     document.getElementById('backButton').addEventListener('click', function() {
       if (setupProgression == 1) {
+        document.getElementById('playerNames').style.display = "none";
         document.getElementById('player0').style.display = "none";
         document.getElementById('setupButtonWrapper').style.display = "none";
         document.getElementById('setupError').style.visibility = "hidden";
@@ -257,6 +327,7 @@
     document.getElementById('nextButton').addEventListener('click', function() {
       if (document.getElementById('player' + (setupProgression - 1)).value == "") {
         document.getElementById('setupError').style.visibility = "visible";
+        document.getElementById('player' + (setupProgression - 1)).focus();
         return false;
       } else {
         document.getElementById('setupError').style.visibility = "hidden";
@@ -332,7 +403,7 @@
               console.log("didn't need to adjust font");
           }
         }
-        modal.classList.remove("open");
+        modalSetup.classList.remove("open");
         playGame();
       }
     });
@@ -386,6 +457,7 @@
           console.log(currentPlayer + " of " + (players.length - 1));
           if (currentPlayer == (players.length - 1)) {
             currentPlayer = 0;
+            rounds++;
           } else {
             currentPlayer++;
           }
@@ -426,15 +498,13 @@
           document.getElementById("penny" + rollDice).classList.remove('slide-out');
         }, 1000);
 
-
-
-
         playerStacks[currentPlayer]--;
         document.getElementById('player' + currentPlayer + '-stack').innerHTML = playerStacks[currentPlayer];
         if (playerStacks[currentPlayer] == 0) {
           setTimeout(function() {
             displayWinner(players[currentPlayer]);
           }, 1000);
+
         }
         if (firstTurn) {
           firstTurn == false;
@@ -444,10 +514,25 @@
     }
 
     async function rollButtonPressed() {
+      document.getElementById('rollButton').style.pointerEvents = 'none';
+      document.getElementById('passButton').style.pointerEvents = 'none';
+      document.getElementById('rollButton').style.background = '#808080';
+      document.getElementById('passButton').style.background = '#808080';
+
+      console.log("wait to roll again")
       for (var k = 0; k < 25; k++) {
         await rollDiceAnimation();
       }
       afterRolling();
+      setTimeout(function() {
+        document.getElementById('rollButton').style.pointerEvents = 'auto';
+        document.getElementById('passButton').style.pointerEvents = 'auto';
+        document.getElementById('rollButton').style.background = '#D98D62';
+        document.getElementById('passButton').style.background = '#90a68a';
+        console.log("ready to roll again")
+      }, 500);
+
+
     }
 
 
@@ -460,6 +545,7 @@
       document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
       if (currentPlayer == (players.length - 1)) {
         currentPlayer = 0;
+        rounds++
       } else {
         currentPlayer++;
       }
@@ -482,7 +568,7 @@
 
     }
 
-    document.getElementById('rematchButton').addEventListener('click', function() {
+    function restartCurrentGame() {
       document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
       playerStacks = [];
       gameEnded = false;
@@ -491,17 +577,39 @@
       spots = [];
       spots = [false, false, false, false, false];
       allRolls = [];
+      rounds = 1;
       document.getElementById('dice-img').src = "img/dice-0.png";
+      document.getElementById('rollButton').style.visibility = "visible";
       var imgElements = document.getElementsByClassName('penny');
       Array.from(imgElements).forEach(element => element.style.visibility = "hidden");
-
       players.forEach(element => {
         playerStacks.push(10);
       });
       console.log(playerStacks);
       playGame();
+    }
+
+    document.getElementById('settingsResumeButton').addEventListener('click', function() {
+      modalSettings.classList.remove("open");
+    });
+
+    document.getElementById('settingsRematchButton').addEventListener('click', function() {
+      restartCurrentGame();
+      modalSettings.classList.remove("open");
+    });
+
+    document.getElementById('settingsNewGameButton').addEventListener('click', function() {
+      location.reload();
+    });
+
+    document.getElementById('rematchButton').addEventListener('click', function() {
+      restartCurrentGame();
       modalWin.classList.remove("open");
     });
+
+    function onWinCloseClick() {
+      modalWin.classList.remove("open");
+    }
 
     document.getElementById('newGameButton').addEventListener('click', function() {
       location.reload();
