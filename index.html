@@ -164,6 +164,10 @@
       <div class="modal-container">
         <div id="settingsResumeButton" class="resume-button"><ion-icon name="arrow-back-outline" class="ion-rematch"></ion-icon> RESUME</div>
         <div class="spacer-large"></div>
+        <div class="setting-option">
+          <div id="turnSummaryCheckbox" class="setting-checkbox"><ion-icon name="checkmark-outline"></ion-icon></div><div class="setting-checkbox-label">Show Turn Summary</div>
+        </div>
+        <div class="spacer-large"></div>
         <div id="settingsRematchButton" class="rematch-button">RESTART <ion-icon name="refresh-outline" class="ion-rematch"></ion-icon></div>
         <div class="spacer-large"></div>
         <div id="settingsNewGameButton" class="new-game-button">NEW GAME</div>
@@ -213,6 +217,31 @@
         <div id="rematchButton" class="rematch-button">REMATCH <ion-icon name="refresh-outline" class="ion-rematch"></ion-icon></div>
         <div class="spacer-large"></div>
         <div id="newGameButton" class="new-game-button">NEW GAME</div>
+      </div>
+    </div>
+    <div class="modal" id="modal-turn-summary">
+      <div class="modal-turn-summary-bg"></div>
+      <div class="modal-container">
+        <!-- <ion-icon name="close-circle-outline" class="ion-win-close" id="turn-close-button"></ion-icon> -->
+        <h2 id="turnMessage"></h2>
+        <div class="spacer-large"></div>
+        <div class="turn-stats">
+          <h2>Turn Stats</h2>
+          <div class="turn-stats-details">
+            <p id="turnRolls"></p>
+            <div class="spacer-small"></div>
+            <p id="turnStart"></p>
+            <div class="spacer-small"></div>
+            <p id="turnEnd"></p>
+            <div class="spacer-small"></div>
+            <p id="turnResult"></p>
+          </div>
+        </div>
+        <!-- <h2 class="turn-stats">Turn Stats</h2>
+        <div class="spacer-small"></div>
+        <p id="turnSummary"></p> -->
+        <div class="spacer-large"></div>
+        <h2 id="turnSummaryNext">It’s XXXX’s Turn</h2>
       </div>
     </div>
   </body>

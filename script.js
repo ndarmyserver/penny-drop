@@ -3,17 +3,22 @@ var playerStacks = [];
 var gameEnded = false;
 var currentPlayer = 0;
 var firstTurn = true;
+turnRolls = 0;
+turnStartingStack = 0;
+turnEndingStack = 0;
 var spots = [false, false, false, false, false];
 var allRolls = [];
 var rounds = 1;
 var setupProgression = 0;
 var numOfPlayers = 2;
+var turnSummary = true;
 
 
 
 const modalSetup = document.getElementById('modal-setup');
 const modalWin = document.getElementById('modal-win');
 const modalSettings = document.getElementById('modal-settings');
+const modalTurnSummary = document.getElementById('modal-turn-summary');
 
 // Open Game Setup modal on page load
 modalSetup.classList.add("open");
@@ -182,6 +187,30 @@ function setupGame() {
 
 document.getElementById('playButton').addEventListener('click', () => setupGame());
 
+function showTurnSummary(turnCurrentPlayer, turnNextPlayer, passOrRoll) {
+  console.log(turnNextPlayer);
+  if (turnSummary) {
+    const turnResult = turnEndingStack - turnStartingStack;
+    if (turnResult > 0) {
+      var turnResultClass = "result-bad";
+      var turnResultAdd = "+";
+    } else {
+       var turnResultClass = "result-good";
+       var turnResultAdd = "";
+    }
+    document.getElementById("turnMessage").innerText = passOrRoll == "roll" ? `Pick’em Up!` : `Nice!`;
+    document.getElementById("turnRolls").innerText = `Rolls: ${turnRolls}`;
+    document.getElementById("turnStart").innerText = `Starting Pennies: ${turnStartingStack}`;
+    document.getElementById("turnEnd").innerText = `Ending Pennies: ${turnEndingStack}`;
+    document.getElementById("turnResult").innerHTML = `+/- Pennies: <span class="${turnResultClass}">${turnResultAdd}${turnResult}<span>`;
+    document.getElementById("turnSummaryNext").innerText = `It’s ${turnNextPlayer}’s Turn`;
+    modalTurnSummary.classList.add("open");
+    setTimeout(function() {
+      modalTurnSummary.classList.remove("open");
+    }, 4000);
+  }
+}
+
 function rollDiceAnimation() {
   var randomNumber = (Math.floor(Math.random() * 6) + 1);
   document.getElementById('dice-img').src = "img/dice-" + randomNumber + ".png";
@@ -198,6 +227,16 @@ function afterRolling() {
   allRolls.push(rollDice);
   document.getElementById('dice-img').src = "img/dice-" + rollDice + ".png";
   document.getElementById('dice-img').alt = "Dice - " + rollDice;
+
+  console.log(firstTurn, turnRolls, turnStartingStack, turnEndingStack);
+  if (firstTurn) {
+    turnStartingStack = playerStacks[currentPlayer]
+    turnRolls = 1;
+  } else {
+    turnRolls++;
+  }
+  console.log(firstTurn, turnRolls, turnStartingStack, turnEndingStack);
+
 
   if (rollDice >= 1 && rollDice <= 5) {
     if (spots[rollDice - 1]) {
@@ -221,12 +260,18 @@ function afterRolling() {
 
       // Turn is over and advance to next player
       document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
-      console.log(currentPlayer + " of " + (players.length - 1));
+      turnEndingStack = playerStacks[currentPlayer];
       if (currentPlayer == (players.length - 1)) {
-        currentPlayer = 0;
+        setTimeout(function() {
+          showTurnSummary(players[currentPlayer], players[0], "roll");
+          currentPlayer = 0;
+        }, 1000);
         rounds++;
       } else {
-        currentPlayer++;
+        setTimeout(function() {
+          showTurnSummary(players[currentPlayer], players[currentPlayer + 1], "roll");
+          currentPlayer++;
+        }, 1000);
       }
       document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
       document.getElementById('passButton').style.visibility = "hidden";
@@ -251,7 +296,7 @@ function afterRolling() {
         }, 1000);
       }
       if (firstTurn) {
-        firstTurn == false;
+        firstTurn = false;
         document.getElementById('passButton').style.visibility = "visible";
       }
     }
@@ -274,7 +319,7 @@ function afterRolling() {
 
     }
     if (firstTurn) {
-      firstTurn == false;
+      firstTurn = false;
       document.getElementById('passButton').style.visibility = "visible";
     }
   }
@@ -302,11 +347,21 @@ async function rollButtonPressed() {
 
 function passButtonPressed() {
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
+  turnEndingStack = playerStacks[currentPlayer];
   if (currentPlayer == (players.length - 1)) {
-    currentPlayer = 0;
+    setTimeout(function() {
+      showTurnSummary(players[currentPlayer], players[0], "pass");
+      currentPlayer = 0;
+    }, 100);
     rounds++
   } else {
-    currentPlayer++;
+    console.log(currentPlayer);
+    console.log(players[currentPlayer]);
+    console.log(players[currentPlayer + 1]);
+    setTimeout(function() {
+      showTurnSummary(players[currentPlayer], players[currentPlayer + 1], "pass");
+      currentPlayer++;
+    }, 100);
   }
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
   firstTurn = true
@@ -324,7 +379,6 @@ function playGame() {
 
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
   document.getElementById('passButton').style.visibility = "hidden";
-
 }
 
 function restartCurrentGame() {
@@ -366,12 +420,25 @@ document.getElementById('settingsRematchButton').addEventListener('click', () =>
 
 document.getElementById('settingsNewGameButton').addEventListener('click', () => location.reload());
 
+function turnSummaryCheckboxClicked() {
+  if (turnSummary) {
+    turnSummary = false;
+    document.getElementById('turnSummaryCheckbox').innerHTML = "";
+  } else {
+    turnSummary = true;
+    document.getElementById('turnSummaryCheckbox').innerHTML = '<ion-icon name="checkmark-outline"></ion-icon>';
+  }
+}
+
+document.getElementById('turnSummaryCheckbox').addEventListener('click', () => turnSummaryCheckboxClicked());
+
 document.getElementById('rematchButton').addEventListener('click', () => {
   restartCurrentGame();
   modalWin.classList.remove("open");
 });
 
 document.getElementById('win-close-button').addEventListener('click', () => modalWin.classList.remove("open"));
+document.getElementById('turn-close-button').addEventListener('click', () => modalTurnSummary.classList.remove("open"));
 
 document.getElementById('newGameButton').addEventListener('click', () => location.reload());
 
