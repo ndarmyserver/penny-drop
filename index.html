@@ -82,6 +82,7 @@
         <div class="spacer-large"></div>
         <div id="dice" class="dice"><img src="img/dice-0.png" id="dice-img" class="dice" alt="Blank Dice"></div>
         <div class="spacer-large"></div>
+        <div id="showWinButton" class="show-win-button" style="display: none;">SHOW GAME SUMMARY</div>
         <div class="button-wrapper">
           <div id="passButton" class="pass-button" style="visibility: hidden;">PASS</div>
           <div id="rollButton" class="roll-button">ROLL</div>
@@ -112,7 +113,7 @@
       </div>
     </div>
     <div class="settings">
-      <ion-icon name="settings-outline" onClick="onSettingsClick()"></ion-icon>
+      <ion-icon name="settings-outline" id="settings-button"></ion-icon>
     </div>
     <div class="modal" id="modal-setup">
       <div class="modal-bg">
@@ -125,14 +126,14 @@
           <h2>How many players?</h2>
           <div class="spacer"></div>
           <div class="number-players-container">
-            <div id="minus-button" class="left-col">
-              <ion-icon name="remove-circle-outline" onClick="onPlayerMinusClick()"></ion-icon>
+            <div class="left-col">
+              <ion-icon name="remove-circle-outline" id="minus-button" ></ion-icon>
             </div>
             <div class="center-col">
               <span id="num-of-players">2</span>
             </div>
-            <div id="plus-button" class="right-col">
-              <ion-icon name="add-circle-outline" onClick="onPlayerPlusClick()"></ion-icon>
+            <div class="right-col">
+              <ion-icon name="add-circle-outline" id="plus-button"></ion-icon>
             </div>
           </div>
         </div>
@@ -171,7 +172,7 @@
     <div class="modal" id="modal-win">
       <div class="modal-winner-bg"></div>
       <div class="modal-container">
-        <ion-icon name="close-circle-outline" class="ion-win-close" onClick="onWinCloseClick()"></ion-icon>
+        <ion-icon name="close-circle-outline" class="ion-win-close" id="win-close-button"></ion-icon>
         <h1 id="winner" class="winner"></h1>
         <h2>is the winner!</h2>
         <div class="spacer-large"></div>

@@ -115,7 +115,7 @@ img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
   -o-transition: 3s;
   transition: 3s;
   margin-top: 50% !important;} */
-.roll-button, .pass-button, .first-next-button, .back-button, .next-button, .play-button, .rematch-button, .new-game-button, .resume-button {
+.roll-button, .pass-button, .first-next-button, .back-button, .next-button, .play-button, .rematch-button, .new-game-button, .resume-button, .show-win-button {
   margin: 0 auto;
   box-sizing: border-box;
   width: 100%;
@@ -157,6 +157,13 @@ img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
   background: #5e7358;
 }
 
+.show-win-button {
+  background: #cfdcc8;
+  border: 3px solid #5e7358;
+  color: #5e7358;
+  max-width: 100%;
+}
+
 .setup-button-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -167,7 +174,7 @@ img.dice { display: block; width: 25%; max-width: 150px; margin: 0 auto; }
 .button-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 1rem;
+  grid-column-gap: 2rem;
   margin: 0 auto;
 }
 
@@ -413,10 +420,9 @@ input[type=text]:focus {
     margin: 0 auto;
   }
 
-  .stack-wrapper {
-    grid-column-gap: 0.8rem;
-    grid-row-gap: 0.8rem;
-    margin: 0 auto;
+  .stack-wrapper, .button-wrapper {
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
   }
 
   .modal {

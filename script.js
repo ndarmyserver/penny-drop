@@ -18,26 +18,14 @@ const modalSettings = document.getElementById('modal-settings');
 // Open Game Setup modal on page load
 modalSetup.classList.add("open");
 
-function onSettingsClick() {
+function settingsButtonClicked() {
   modalSettings.classList.add("open");
 }
 
-function displayWinner(winner) {
-  document.getElementById('rollButton').style.visibility = "hidden";
-  document.getElementById('passButton').style.visibility = "hidden";
-  document.getElementById("winner").innerText = winner;
-  console.log("all rolls: " + allRolls);
-  document.getElementById("winRounds").innerText = `Rounds: ${rounds}`
-  for (x = 1; x < 7; x++) {
-    console.log(allRolls.length);
-    console.log(allRolls.filter((v) => (v === x)).length);
-    console.log((allRolls.filter((v) => (v === x)).length) / allRolls.length);
-    document.getElementById("win" + x).innerText = `${Math.round((allRolls.filter((v) => (v === x)).length / allRolls.length) * 100)}%`
-  }
-  modalWin.classList.add("open");
-}
+document.getElementById('settings-button').addEventListener('click', () => settingsButtonClicked());
 
-function onPlayerMinusClick() {
+
+function playerMinusButtonClicked() {
   if (numOfPlayers > 2) {
     numOfPlayers -= 1;
     if (numOfPlayers == 2) {
@@ -52,7 +40,10 @@ function onPlayerMinusClick() {
   document.getElementById("num-of-players").innerText = numOfPlayers;
 };
 
-function onPlayerPlusClick() {
+document.getElementById('minus-button').addEventListener('click', () => playerMinusButtonClicked());
+
+
+function playerPlusButtonClick() {
   if (numOfPlayers < 5) {
     numOfPlayers += 1;
     if (numOfPlayers == 5) {
@@ -65,7 +56,10 @@ function onPlayerPlusClick() {
   }
 };
 
-document.getElementById('firstNextButton').addEventListener('click', function() {
+document.getElementById('plus-button').addEventListener('click', () => playerPlusButtonClick());
+
+
+function firstNextButtonClicked() {
   setupProgression = 1;
   document.getElementById('setupPrompt').style.display = "none";
   document.getElementById('firstNextButton').style.display = "none";
@@ -73,11 +67,11 @@ document.getElementById('firstNextButton').addEventListener('click', function() 
   document.getElementById('playerNames').style.display = "block";
   document.getElementById('player0').style.display = "block";
   document.getElementById('player0').focus();
-  console.log("kid tickets: " + numOfPlayers)
-  console.log(setupProgression)
-});
+}
 
-document.getElementById('backButton').addEventListener('click', function() {
+document.getElementById('firstNextButton').addEventListener('click', () => firstNextButtonClicked());
+
+function backButtonClicked() {
   if (setupProgression == 1) {
     document.getElementById('playerNames').style.display = "none";
     document.getElementById('player0').style.display = "none";
@@ -97,9 +91,11 @@ document.getElementById('backButton').addEventListener('click', function() {
   }
   setupProgression -= 1;
   console.log(setupProgression)
-});
+}
 
-document.getElementById('nextButton').addEventListener('click', function() {
+document.getElementById('backButton').addEventListener('click', () => backButtonClicked());
+
+function nextButtonClicked() {
   if (document.getElementById('player' + (setupProgression - 1)).value == "") {
     document.getElementById('setupError').style.visibility = "visible";
     document.getElementById('player' + (setupProgression - 1)).focus();
@@ -117,10 +113,11 @@ document.getElementById('nextButton').addEventListener('click', function() {
     console.log(setupProgression)
 
   }
-});
+}
 
+document.getElementById('nextButton').addEventListener('click', () => nextButtonClicked());
 
-document.getElementById('playButton').addEventListener('click', function() {
+function setupGame() {
   if (document.getElementById('player' + (setupProgression - 1)).value == "") {
     document.getElementById('setupError').style.visibility = "visible";
     document.getElementById('player' + (setupProgression - 1)).focus();
@@ -158,8 +155,8 @@ document.getElementById('playButton').addEventListener('click', function() {
         console.log("something went wrong.");
     }
     document.getElementById('stackWrapper').style.gridTemplateColumns = numColumns;
-    // Checks if media query for less than 601px wide is true
 
+    // Checks if media query for less than 601px wide is true
     if (window.matchMedia('(max-width: 600px)').matches) {
       var stackElements = document.getElementsByClassName('player-stack');
       var nameElements = document.getElementsByClassName('player-name');
@@ -181,14 +178,11 @@ document.getElementById('playButton').addEventListener('click', function() {
     modalSetup.classList.remove("open");
     playGame();
   }
-});
-// For testing before implementing number of player modal
-// var players = ["Johnny", "Mommy", "Kate", "Brooke", "Daddy"];
-//   var players = ["Johnny", "Daddy"];
-// var playerStacks = [10, 10, 10, 10, 10];
-//   var playerStacks = [10, 10];
+}
+
+document.getElementById('playButton').addEventListener('click', () => setupGame());
+
 function rollDiceAnimation() {
-  // document.getElementById('dice').innerHTML = (Math.floor(Math.random() * 6) + 1);
   var randomNumber = (Math.floor(Math.random() * 6) + 1);
   document.getElementById('dice-img').src = "img/dice-" + randomNumber + ".png";
   document.getElementById('dice-img').alt = "Dice - " + randomNumber;
@@ -200,7 +194,6 @@ function rollDiceAnimation() {
 }
 
 function afterRolling() {
-
   var rollDice = (Math.floor(Math.random() * 6) + 1);
   allRolls.push(rollDice);
   document.getElementById('dice-img').src = "img/dice-" + rollDice + ".png";
@@ -225,7 +218,6 @@ function afterRolling() {
           spots[j] = false;
         }
       }, 1000);
-
 
       // Turn is over and advance to next player
       document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
@@ -291,8 +283,8 @@ function afterRolling() {
 async function rollButtonPressed() {
   document.getElementById('rollButton').style.pointerEvents = 'none';
   document.getElementById('passButton').style.pointerEvents = 'none';
-  document.getElementById('rollButton').style.background = '#808080';
-  document.getElementById('passButton').style.background = '#808080';
+  document.getElementById('rollButton').style.background = 'rgba(217,141,98,0.5)';
+  document.getElementById('passButton').style.background = 'rgba(144,166,138,0.5)';
 
   console.log("wait to roll again")
   for (var k = 0; k < 25; k++) {
@@ -306,17 +298,9 @@ async function rollButtonPressed() {
     document.getElementById('passButton').style.background = '#90a68a';
     console.log("ready to roll again")
   }, 500);
-
-
 }
 
-
-document.getElementById('rollButton').addEventListener('click', function() {
-  console.log("roll button pressed");
-  rollButtonPressed();
-});
-
-document.getElementById('passButton').addEventListener('click', function() {
+function passButtonPressed() {
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
   if (currentPlayer == (players.length - 1)) {
     currentPlayer = 0;
@@ -327,7 +311,7 @@ document.getElementById('passButton').addEventListener('click', function() {
   document.getElementById('player' + currentPlayer + '-name').classList.toggle("active-player");
   firstTurn = true
   document.getElementById('passButton').style.visibility = "hidden";
-});
+}
 
 function playGame() {
   for (const [i, name] of players.entries()) {
@@ -355,37 +339,57 @@ function restartCurrentGame() {
   rounds = 1;
   document.getElementById('dice-img').src = "img/dice-0.png";
   document.getElementById('rollButton').style.visibility = "visible";
+  document.getElementById('rollButton').style.display = "block";
+  document.getElementById('passButton').style.visibility = "hidden";
+  document.getElementById('passButton').style.display = "block";
+  document.getElementById('showWinButton').style.display = "none";
+  // Hide all penny images
   var imgElements = document.getElementsByClassName('penny');
   Array.from(imgElements).forEach(element => element.style.visibility = "hidden");
   players.forEach(element => {
     playerStacks.push(10);
   });
-  console.log(playerStacks);
   playGame();
 }
 
-document.getElementById('settingsResumeButton').addEventListener('click', function() {
-  modalSettings.classList.remove("open");
-});
+document.getElementById('rollButton').addEventListener('click', () => rollButtonPressed());
 
-document.getElementById('settingsRematchButton').addEventListener('click', function() {
+document.getElementById('passButton').addEventListener('click', () => passButtonPressed());
+
+
+document.getElementById('settingsResumeButton').addEventListener('click', () => modalSettings.classList.remove("open"));
+
+document.getElementById('settingsRematchButton').addEventListener('click', () => {
   restartCurrentGame();
   modalSettings.classList.remove("open");
 });
 
-document.getElementById('settingsNewGameButton').addEventListener('click', function() {
-  location.reload();
-});
+document.getElementById('settingsNewGameButton').addEventListener('click', () => location.reload());
 
-document.getElementById('rematchButton').addEventListener('click', function() {
+document.getElementById('rematchButton').addEventListener('click', () => {
   restartCurrentGame();
   modalWin.classList.remove("open");
 });
 
-function onWinCloseClick() {
-  modalWin.classList.remove("open");
+document.getElementById('win-close-button').addEventListener('click', () => modalWin.classList.remove("open"));
+
+document.getElementById('newGameButton').addEventListener('click', () => location.reload());
+
+document.getElementById('showWinButton').addEventListener('click', () => modalWin.classList.add("open"));
+
+// Display winner modal
+function displayWinner(winner) {
+  document.getElementById('rollButton').style.display = "none";
+  document.getElementById('passButton').style.display = "none";
+  document.getElementById('showWinButton').style.display = "block";
+  document.getElementById("winner").innerText = winner;
+  console.log("all rolls: " + allRolls);
+  document.getElementById("winRounds").innerText = `Rounds: ${rounds}`
+  for (x = 1; x < 7; x++) {
+    console.log(allRolls.length);
+    console.log(allRolls.filter((v) => (v === x)).length);
+    console.log((allRolls.filter((v) => (v === x)).length) / allRolls.length);
+    document.getElementById("win" + x).innerText = `${Math.round((allRolls.filter((v) => (v === x)).length / allRolls.length) * 100)}%`
+  }
+  modalWin.classList.add("open");
 }
-
-document.getElementById('newGameButton').addEventListener('click', function() {
-  location.reload();
-});
