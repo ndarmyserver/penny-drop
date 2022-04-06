@@ -280,7 +280,7 @@ function rollDiceAnimation() {
 }
 
 function calculateSuccessPercent(spotAfterRolling) {
-  const successPercent = Math.round(((5 - spotAfterRolling.filter(Boolean).length) / 6 * 100));
+  const successPercent = Math.round(((6 - spotAfterRolling.filter(Boolean).length) / 6 * 100));
   document.getElementById('successRate').innerHTML = (showSuccessRate ? `Chance of success: ${successPercent}%` : "&nbsp;");
   toggleSuccessClass(successPercent);
 
