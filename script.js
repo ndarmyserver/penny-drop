@@ -244,6 +244,7 @@ function showTurnSummary(turnCurrentPlayer, turnNextPlayer, passOrRoll) {
     document.getElementById("turnResult").innerHTML = `+/- Pennies: <span class="${turnResultClass}">${turnResultAdd}${turnResult}<span>`;
     document.getElementById("turnSummaryNext").innerText = `It’s ${turnNextPlayer}’s Turn`;
     modalTurnSummary.classList.add("open");
+    document.getElementById('modal-turn-summary').addEventListener('click', () => modalTurnSummary.classList.remove("open"));
     setTimeout(function() {
       modalTurnSummary.classList.remove("open");
     }, 4000);
